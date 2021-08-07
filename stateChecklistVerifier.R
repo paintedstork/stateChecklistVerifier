@@ -19,8 +19,8 @@ base <- read.xlsx(indiaChecklist, sheetIndex = 2)
 
 #------------------------------------------
 # Configurations for each State
-stateName <- 'Karnataka'
-stateChecklistMajorVersion <- 3
+stateName <- 'Lakshadweep'
+stateChecklistMajorVersion <- 1
 stateChecklistMinorVersion <- 0
 stateChecklistName <- paste0(stateName,"_Checklist_v",
                              stateChecklistMajorVersion,"_",
@@ -49,13 +49,13 @@ verifySheetNames <- function (checklistName)
 
   if(checklistName != names(sheets)[2])
   {
-    printFile(paste("First sheet should be named", checklistName, "and not", names(sheets)[2]))
+    printFile(paste("Second sheet should be named", checklistName, "and not", names(sheets)[2]))
     ret = FALSE
   }
   
-  if("Additional Bibilography" != names(sheets)[length(sheets)])
+  if("Additional Bibliography" != names(sheets)[length(sheets)])
   {
-    printFile("First sheet should be named Additional Bibilography")
+    printFile("Third sheet should be named Additional Bibliography")
     ret = FALSE
   }
   
@@ -128,21 +128,21 @@ test <- read.xlsx(stateChecklist, sheetIndex = 2)
 
 printFile("Verifying Mandatory Column Names")
 
-ret <- any (FALSE, lapply(mandatoryColumns, verifyColumn, dat = test))
+ret <- any (FALSE == lapply(mandatoryColumns, verifyColumn, dat = test))
 
 printFile("Verifying Sl No continuity")
 
-ret <- any (FALSE, lapply(1:nrow(test), verifySlNo, dat = test)) || ret
+ret <- any (FALSE == lapply(1:nrow(test), verifySlNo, dat = test)) || ret
 
 printFile("Verifying all names")
-ret <- any (FALSE, lapply(mandatoryColumns[4:6], verifyEntries, dat = test)) || ret
+ret <- any (FALSE == lapply(mandatoryColumns[4:6], verifyEntries, dat = test)) || ret
 
 print("Verifying mandatory columns aganist Scientific Name")
-ret <- any (FALSE, lapply(mandatoryColumns[2:5], verifyCrossEntries, dat = test)) || ret
+ret <- any (FALSE == lapply(mandatoryColumns[2:5], verifyCrossEntries, dat = test)) || ret
 
 printFile ("Verifying other columns aganist Scientific Name")
 otherColumns <- setdiff (colnames(test), union (mandatoryColumns, exceptColumns))
-ret <- any (FALSE, lapply(otherColumns, verifyCrossEntries, dat = test)) || ret
+ret <- any (FALSE == lapply(otherColumns, verifyCrossEntries, dat = test)) || ret
 
 if (ret == TRUE)
 {
