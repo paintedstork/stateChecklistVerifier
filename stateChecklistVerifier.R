@@ -9,9 +9,9 @@ mandatoryColumns <- c ("Sl.No",
                        "English.Name", 
                        "Scientific.Name", 
                        "Authority")
-IndiaCheckListMajorVersion <- 5
-IndiaCheckListMinorVersion <- 0
-indiaChecklist <- paste0("India_checklist_v",
+IndiaCheckListMajorVersion <- 6
+IndiaCheckListMinorVersion <- 1
+indiaChecklist <- paste0("India-Checklist_v",
                    IndiaCheckListMajorVersion,"_",
                    IndiaCheckListMinorVersion,
                    ".xlsx")
@@ -19,8 +19,8 @@ base <- read.xlsx(indiaChecklist, sheetIndex = 2)
 
 #------------------------------------------
 # Configurations for each State
-stateName <- 'Lakshadweep'
-stateChecklistMajorVersion <- 1
+stateName <- 'Karnataka'
+stateChecklistMajorVersion <- 4
 stateChecklistMinorVersion <- 0
 stateChecklistName <- paste0(stateName,"_Checklist_v",
                              stateChecklistMajorVersion,"_",
@@ -102,12 +102,15 @@ verifyEntries <- function (column, dat)
 
 verifyCrossEntries <- function (column, dat)
 {
-  diff <- anti_join (dat [c("Scientific.Name", column)], base [c("Scientific.Name", column)], by = c("Scientific.Name", column))
-  if(nrow (diff) > 0)
+  if(column %in% colnames(base))
   {
-    write(paste ("Mismatch in", column), outputfile, append = TRUE)
-    write.table(diff, outputfile, append = TRUE, row.names = FALSE)
-    return (FALSE)
+    diff <- anti_join (dat [c("Scientific.Name", column)], base [c("Scientific.Name", column)], by = c("Scientific.Name", column))
+    if(nrow (diff) > 0)
+    {
+      write(paste ("Mismatch in", column), outputfile, append = TRUE)
+      write.table(diff, outputfile, append = TRUE, row.names = FALSE)
+      return (FALSE)
+    }
   }
   return (TRUE)
   
