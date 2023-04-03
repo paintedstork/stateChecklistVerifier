@@ -9,18 +9,19 @@ mandatoryColumns <- c ("Sl.No",
                        "English.Name", 
                        "Scientific.Name", 
                        "Authority")
-IndiaCheckListMajorVersion <- 6
-IndiaCheckListMinorVersion <- 1
+IndiaCheckListMajorVersion <- 7
+IndiaCheckListMinorVersion <- 0
 indiaChecklist <- paste0("India-Checklist_v",
                    IndiaCheckListMajorVersion,"_",
                    IndiaCheckListMinorVersion,
                    ".xlsx")
 base <- read.xlsx(indiaChecklist, sheetIndex = 2)
+base[is.na(base)] = ""
 
 #------------------------------------------
 # Configurations for each State
-stateName <- 'Karnataka'
-stateChecklistMajorVersion <- 4
+stateName <- 'Goa'
+stateChecklistMajorVersion <- 5
 stateChecklistMinorVersion <- 0
 stateChecklistName <- paste0(stateName,"_Checklist_v",
                              stateChecklistMajorVersion,"_",
@@ -107,6 +108,7 @@ verifyCrossEntries <- function (column, dat)
     diff <- anti_join (dat [c("Scientific.Name", column)], base [c("Scientific.Name", column)], by = c("Scientific.Name", column))
     if(nrow (diff) > 0)
     {
+      print(nrow(diff))
       write(paste ("Mismatch in", column), outputfile, append = TRUE)
       write.table(diff, outputfile, append = TRUE, row.names = FALSE)
       return (FALSE)
@@ -128,6 +130,7 @@ printFile("Verifying Sheet Names")
 ret <- verifySheetNames (stateChecklistName)
 
 test <- read.xlsx(stateChecklist, sheetIndex = 2)
+test[is.na(test)] = ""
 
 printFile("Verifying Mandatory Column Names")
 
